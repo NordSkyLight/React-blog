@@ -2,11 +2,13 @@ import { Component } from "react";
 import "./Blog.css";
 import { posts } from "../../shared/projectData";
 import { BlogCard } from "./components/BlogCard";
+import { AddBlogPost } from "./components/AddBlogPost";
 
 export class Blog extends Component {
 
   state = {
     showBlog: true,
+    showAddBlog: false,
     blogArr: JSON.parse(localStorage.getItem('blogStore')) || posts
   };
 
@@ -25,6 +27,12 @@ export class Blog extends Component {
   toggleBlog = () => {
     this.setState({
       showBlog: !this.state.showBlog
+    })
+  };
+
+  handleAddBlog = () => {
+    this.setState({
+      showAddBlog: !this.state.showAddBlog
     })
   };
 
@@ -55,16 +63,26 @@ export class Blog extends Component {
       );
     });
     return (
-    <>
-      <button onClick={this.toggleBlog} className='toggle-blog-button'>{this.state.showBlog ? 'Скрыть блог' : 'Показать блог'}</button>
-      {
-        this.state.showBlog ?
-        <>
-          <div className="Posts">{blogPosts}</div>
-        </>
-        : null
-      }
-    </>
+      <>
+
+        <button onClick={this.handleAddBlog} className='toggle-blog-button'>Создать пост</button>
+        {
+          this.state.showAddBlog ?
+          <>
+            <AddBlogPost />
+          </>
+          : null
+        }
+        
+        <button onClick={this.toggleBlog} className='toggle-blog-button'>{this.state.showBlog ? 'Скрыть блог' : 'Показать блог'}</button>
+        {
+          this.state.showBlog ?
+          <>
+            <div className="Posts">{blogPosts}</div>
+          </>
+          : null
+        }
+      </>
     );
   };
 };

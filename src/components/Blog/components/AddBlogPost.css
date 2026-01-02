@@ -1,0 +1,53 @@
+.addPostForm {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background-color: white;
+    z-index: 100;
+    padding: 0 15px 0;
+    border-radius: 10px;
+}
+
+.addPostForm div {
+    margin-bottom: 20px;
+}
+
+.addPostForm input, .addPostForm textarea {
+    width: 100%;
+    padding: 0;
+}
+
+.addPostForm textarea {
+    height: 100px;
+}
+
+.addPostForm input {
+    height: 20px;
+}
+
+.addPostForm button {
+    height: 40px;
+    width: 120px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+}
+
+.addPostForm button:hover {
+    opacity: 0.7;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(1, 1, 1, 0.5);
+    z-index: 99;
+}
