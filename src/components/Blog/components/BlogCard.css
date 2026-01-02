@@ -1,0 +1,37 @@
+.like {
+    display: flex;
+}
+
+.like-icon {
+    display: flex;
+    background-color: transparent;
+    color: black;
+    align-items: center;
+    border: none;
+    padding: 0 8px 0;
+}
+
+.like-icon svg {
+    font-size: 40px;
+}
+
+.delete-icon {
+    display: flex;
+    background-color: transparent;
+    color: black;
+    align-items: center;
+    border: none;
+    margin-left: auto;
+    width: 56px;
+    padding: 0 8px 0;
+}
+
+.delete-icon svg {
+    font-size: 40px;
+}
+
+button:hover {
+  opacity: 0.7;
+  transition-duration: 500ms;
+  cursor: pointer;
+}
