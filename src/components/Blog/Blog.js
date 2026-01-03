@@ -46,6 +46,24 @@ export class Blog extends Component {
     if (e.key === 'Escape' && this.state.showAddBlog) this.handleAddBlogHide()
   };
 
+  addNewBlogPost = (blogPost) => {
+    
+
+    this.setState((state) => {
+      const posts = [...state.blogArr];
+      posts.push(blogPost);
+      localStorage.setItem('blogStore', JSON.stringify(posts));
+
+      return {
+        blogArr: posts
+      }
+    })
+
+    
+
+    this.props.handleAddBlogHide();
+  }
+
   componentDidMount() {
     window.addEventListener('keyup', this.handleEsc)
   };
@@ -89,6 +107,8 @@ export class Blog extends Component {
           <>
             <AddBlogPost 
               handleAddBlogHide={() => this.handleAddBlogHide()}
+              blogArr={this.state.blogArr}
+              addNewBlogPost={this.addNewBlogPost}
             />
           </>
           : null

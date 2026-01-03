@@ -21,6 +21,17 @@ export class AddBlogPost extends Component {
         })
     };
 
+    createPost = () => {
+        const post = {
+            id: this.props.blogArr.length + 1,
+            title: this.state.postTitle,
+            description: this.state.postDesc,
+            liked: false
+        }
+
+        this.props.addNewBlogPost(post);
+    };
+
     render() {
         const handleAddBlogHide = this.props.handleAddBlogHide;
         return (
@@ -46,7 +57,7 @@ export class AddBlogPost extends Component {
                         ></textarea>
                     </div>
                     <div>
-                        <button onClick={handleAddBlogHide} className='addPostBtn'>Создать пост</button>
+                        <button onClick={this.createPost} className='addPostBtn'>Создать пост</button>
                     </div>
                 </form>
                 <div onClick={handleAddBlogHide} className='overlay'></div>
