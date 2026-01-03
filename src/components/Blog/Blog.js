@@ -30,10 +30,28 @@ export class Blog extends Component {
     })
   };
 
-  handleAddBlog = () => {
+  handleAddBlogShow = () => {
     this.setState({
-      showAddBlog: !this.state.showAddBlog
+      showAddBlog: true
     })
+  };
+
+  handleAddBlogHide = () => {
+    this.setState({
+      showAddBlog: false
+    })
+  };
+
+  handleEsc = (e) => {
+    if (e.key === 'Escape' && this.state.showAddBlog) this.handleAddBlogHide()
+  };
+
+  componentDidMount() {
+    window.addEventListener('keyup', this.handleEsc)
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener('keyup', this.handleEsc)
   };
 
   deletePost = (pos) => {
@@ -65,11 +83,13 @@ export class Blog extends Component {
     return (
       <>
 
-        <button onClick={this.handleAddBlog} className='toggle-blog-button'>Создать пост</button>
+        <button onClick={this.handleAddBlogShow} className='toggle-blog-button'>Создать пост</button>
         {
           this.state.showAddBlog ?
           <>
-            <AddBlogPost />
+            <AddBlogPost 
+              handleAddBlogHide={() => this.handleAddBlogHide()}
+            />
           </>
           : null
         }

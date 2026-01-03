@@ -1,24 +1,56 @@
+import ClearIcon from '@mui/icons-material/Clear';
 import './AddBlogPost.css';
+import { Component } from 'react';
 
-export const AddBlogPost = () => {
-    
+export class AddBlogPost extends Component {
 
-    return (
-        <>
-            <form className='addPostForm'>
-            <h2>Создание поста</h2>
-            <div>
-                <input placeholder='Название поста' type="text" />
-            </div>
-            <div>
-                <textarea placeholder='Текст' name="" id=""></textarea>
-            </div>
-            <div>
-                <button>Создать пост</button>
-            </div>
-            </form>
-            <div className='overlay'></div>
-        </>
-        
-    );
+    state = {
+        postTitle: '',
+        postDesc: ''
+    };
+
+    handlePostTitleChange = (e) => {
+        this.setState({
+            postTitle: e.target.value
+        })
+    };
+
+    handlePostDescChange = (e) => {
+        this.setState({
+            postDesc: e.target.value
+        })
+    };
+
+    render() {
+        const handleAddBlogHide = this.props.handleAddBlogHide;
+        return (
+            <>
+                <form className='addPostForm'>
+                    <button onClick={handleAddBlogHide} className='CloseAddPostForm'><ClearIcon /></button>
+                    <h2>Создание поста</h2>
+                    <div>
+                        <input 
+                            placeholder='Название поста' 
+                            type="text" 
+                            value={this.state.postTitle}
+                            onChange={this.handlePostTitleChange} 
+                        />
+                    </div>
+                    <div>
+                        <textarea 
+                            placeholder='Текст' 
+                            name="" 
+                            id="" 
+                            value={this.state.postDesc} 
+                            onChange={this.handlePostDescChange}
+                        ></textarea>
+                    </div>
+                    <div>
+                        <button onClick={handleAddBlogHide} className='addPostBtn'>Создать пост</button>
+                    </div>
+                </form>
+                <div onClick={handleAddBlogHide} className='overlay'></div>
+            </>    
+        );
+    };
 };

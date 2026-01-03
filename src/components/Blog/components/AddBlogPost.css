@@ -11,6 +11,14 @@
     border-radius: 10px;
 }
 
+.CloseAddPostForm {
+    position: absolute;
+    border: none;
+    background-color: transparent;
+    right: 0;
+    top: 2px;
+}
+
 .addPostForm div {
     margin-bottom: 20px;
 }
@@ -28,7 +36,7 @@
     height: 20px;
 }
 
-.addPostForm button {
+.addPostBtn {
     height: 40px;
     width: 120px;
     background-color: black;
