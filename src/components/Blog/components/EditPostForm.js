@@ -1,12 +1,12 @@
 import ClearIcon from '@mui/icons-material/Clear';
-import './AddBlogPost.css';
+import './EditPostForm.css';
 import { Component } from 'react';
 
-export class AddBlogPost extends Component {
+export class EditPostForm extends Component {
 
     state = {
-        postTitle: '',
-        postDesc: ''
+        postTitle: this.props.selectedPost.title,
+        postDesc: this.props.selectedPost.description
     };
 
     handlePostTitleChange = (e) => {
@@ -21,38 +21,38 @@ export class AddBlogPost extends Component {
         })
     };
 
-    createPost = (e) => {
+    savePost = (e) => {
         e.preventDefault();
         const post = {
-            id: this.props.blogArr.length + 1,
+            id: this.props.selectedPost.id,
             title: this.state.postTitle,
             description: this.state.postDesc,
-            liked: false
+            liked: this.props.selectedPost.liked
         }
 
-        this.props.addNewBlogPost(post);
-        this.props.handleAddBlogHide();
+        this.props.editNewBlogPost(post); 
+        this.props.handleEditBlogHide();
     };
     
-    //handleEnter = (e) => {
-    //    if (e.key === 'Enter' && this.state.postTitle.length !== 0) this.createPost(e)
-    //};
+    handleEsc = (e) => {
+        if (e.key === 'Escape') this.props.handleEditBlogHide()
+    };
 
-    //componentDidMount() {
-    //    window.addEventListener('keyup', this.handleEnter)
-    //};
+    componentDidMount() {
+        window.addEventListener('keyup', this.handleEsc)
+    };
 
-    //componentWillUnmount() {
-    //    window.addEventListener('keyup', this.handleEnter)
-    //};
+    componentWillUnmount() {
+        window.addEventListener('keyup', this.handleEsc)
+    };
 
     render() {
-        const handleAddBlogHide = this.props.handleAddBlogHide;
+        const handleEditBlogHide = this.props.handleEditBlogHide;
         return (
             <>
-                <form className='addPostForm' onSubmit={this.createPost}>
-                    <button onClick={handleAddBlogHide} className='CloseAddPostForm'><ClearIcon /></button>
-                    <h2>Создание поста</h2>
+                <form className='editPostForm' onSubmit={this.savePost}>
+                    <button onClick={handleEditBlogHide} className='CloseAddPostForm'><ClearIcon /></button>
+                    <h2>Редактирование поста</h2>
                     <div>
                         <input 
                             placeholder='Название поста' 
@@ -73,10 +73,10 @@ export class AddBlogPost extends Component {
                         ></textarea>
                     </div>
                     <div>
-                        <button type='submit' className='addPostBtn'>Создать пост</button>
+                        <button type='submit' className='addPostBtn'>Сохранить</button>
                     </div>
                 </form>
-                <div onClick={handleAddBlogHide} className='overlay'></div>
+                <div onClick={handleEditBlogHide} className='overlay'></div>
             </>    
         );
     };

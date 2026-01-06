@@ -1,15 +1,18 @@
 import { Component } from "react";
 import "./Blog.css";
-import { posts } from "../../shared/projectData";
+//import { posts } from "../../shared/projectData";
 import { BlogCard } from "./components/BlogCard";
 import { AddBlogPost } from "./components/AddBlogPost";
+import { EditPostForm } from "./components/EditPostForm";
+import axios from 'axios';
 
 export class Blog extends Component {
 
   state = {
-    showBlog: true,
     showAddBlog: false,
-    blogArr: JSON.parse(localStorage.getItem('blogStore')) || posts
+    showEditForm: false,
+    blogArr: [],
+    selectedPost: {}
   };
 
   likePost = (pos) => {
@@ -21,14 +24,7 @@ export class Blog extends Component {
     });
 
     localStorage.setItem('blogStore', JSON.stringify(temp));
-
-  };
-  
-  toggleBlog = () => {
-    this.setState({
-      showBlog: !this.state.showBlog
-    })
-  };
+  }; 
 
   handleAddBlogShow = () => {
     this.setState({
@@ -42,13 +38,24 @@ export class Blog extends Component {
     })
   };
 
+  handleEditBlogShow = () => {
+    this.setState({
+      showEditForm: true
+    })
+  };
+
+  handleEditBlogHide = () => {
+    this.setState({
+      showEditForm: false
+    })
+  };
+
   handleEsc = (e) => {
     if (e.key === 'Escape' && this.state.showAddBlog) this.handleAddBlogHide()
   };
 
-  addNewBlogPost = (blogPost) => {
-    
 
+  addNewBlogPost = (blogPost) => {
     this.setState((state) => {
       const posts = [...state.blogArr];
       posts.push(blogPost);
@@ -57,14 +64,19 @@ export class Blog extends Component {
       return {
         blogArr: posts
       }
-    })
-
-    
-
-    this.props.handleAddBlogHide();
-  }
+    });
+  };
 
   componentDidMount() {
+    axios.get('https://695c1f8d79f2f34749d38110.mockapi.io/posts')
+      .then((response) => {
+        this.setState({
+          blogArr: response.data
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     window.addEventListener('keyup', this.handleEsc)
   };
 
@@ -85,6 +97,18 @@ export class Blog extends Component {
     };  
   };
 
+  handleSelectPost = (blogPost) => {
+    this.setState({
+      selectedPost: blogPost
+    })
+  };
+
+  //editBlogPost = (updatedBlogPost) => {
+  //  this.setState({
+  //    isPending
+  //  })
+  //}
+
   render() {
     const blogPosts = this.state.blogArr.map((item, pos) => {
       return (
@@ -95,12 +119,25 @@ export class Blog extends Component {
           liked={item.liked}
           likePost={() => this.likePost(pos)}
           deletePost={() => this.deletePost(pos)}
+          handleEditBlogShow={this.handleEditBlogShow}
+          handleSelectPost={() => this.handleSelectPost(item)}
         />
       );
     });
+
+    if (this.state.blogArr.length === 0)
+      return <h2>Загружаю данные...</h2>
+      
     return (
       <>
-
+        {
+          this.state.showEditForm && (
+            <EditPostForm 
+              handleEditBlogHide={this.handleEditBlogHide}
+              selectedPost={this.state.selectedPost}
+            />
+          )
+        }
         <button onClick={this.handleAddBlogShow} className='toggle-blog-button'>Создать пост</button>
         {
           this.state.showAddBlog ?
@@ -108,20 +145,13 @@ export class Blog extends Component {
             <AddBlogPost 
               handleAddBlogHide={() => this.handleAddBlogHide()}
               blogArr={this.state.blogArr}
+              showAddBlog={this.state.showAddBlog}
               addNewBlogPost={this.addNewBlogPost}
             />
           </>
           : null
         }
-        
-        <button onClick={this.toggleBlog} className='toggle-blog-button'>{this.state.showBlog ? 'Скрыть блог' : 'Показать блог'}</button>
-        {
-          this.state.showBlog ?
-          <>
-            <div className="Posts">{blogPosts}</div>
-          </>
-          : null
-        }
+        <div className="Posts">{blogPosts}</div>   
       </>
     );
   };

@@ -15,19 +15,22 @@
     font-size: 40px;
 }
 
-.delete-icon {
+.icons {
     display: flex;
-    background-color: transparent;
     color: black;
     align-items: center;
-    border: none;
     margin-left: auto;
     width: 56px;
-    padding: 0 8px 0;
+    padding: 0 56px 0;
 }
 
-.delete-icon svg {
+.icons svg {
     font-size: 40px;
+}
+
+.icons-item {
+    background-color: transparent;
+    border: none;
 }
 
 button:hover {
@@ -35,3 +38,4 @@ button:hover {
   transition-duration: 500ms;
   cursor: pointer;
 }
+
