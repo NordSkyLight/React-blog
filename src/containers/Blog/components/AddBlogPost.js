@@ -24,7 +24,6 @@ export class AddBlogPost extends Component {
     createPost = (e) => {
         e.preventDefault();
         const post = {
-            id: this.props.blogArr.length + 1,
             title: this.state.postTitle,
             description: this.state.postDesc,
             liked: false
@@ -35,7 +34,7 @@ export class AddBlogPost extends Component {
     };
     
     //handleEnter = (e) => {
-    //    if (e.key === 'Enter' && this.state.postTitle.length !== 0) this.createPost(e)
+    //    if (e.key === 'Enter') this.createPost(e)
     //};
 
     //componentDidMount() {

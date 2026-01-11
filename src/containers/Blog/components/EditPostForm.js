@@ -30,7 +30,7 @@ export class EditPostForm extends Component {
             liked: this.props.selectedPost.liked
         }
 
-        this.props.editNewBlogPost(post); 
+        this.props.editBlogPost(post); 
         this.props.handleEditBlogHide();
     };
     
@@ -69,6 +69,7 @@ export class EditPostForm extends Component {
                             id="" 
                             value={this.state.postDesc} 
                             onChange={this.handlePostDescChange}
+                            rows={8}
                             required
                         ></textarea>
                     </div>

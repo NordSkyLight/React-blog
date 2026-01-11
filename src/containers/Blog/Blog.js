@@ -1,6 +1,5 @@
 import { Component } from "react";
 import "./Blog.css";
-//import { posts } from "../../shared/projectData";
 import { BlogCard } from "./components/BlogCard";
 import { AddBlogPost } from "./components/AddBlogPost";
 import { EditPostForm } from "./components/EditPostForm";
@@ -12,19 +11,64 @@ export class Blog extends Component {
     showAddBlog: false,
     showEditForm: false,
     blogArr: [],
+    isPending: false,
     selectedPost: {}
   };
 
-  likePost = (pos) => {
-    const temp = [...this.state.blogArr];
-    temp[pos].liked = !temp[pos].liked;
+  fetchPosts = () => {
+    axios.get('https://695c1f8d79f2f34749d38110.mockapi.io/posts')
+      .then((response) => {
+        this.setState({
+          blogArr: response.data,
+          isPending: false
+        });
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  };
 
+  addNewBlogPost = (blogPost) => {
     this.setState({
-      blogArr: temp
+      isPending: true
     });
+    axios.post('https://695c1f8d79f2f34749d38110.mockapi.io/posts/', blogPost)
+      .then((response) => {
+        console.log('Пост создан => ', response.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  };
 
-    localStorage.setItem('blogStore', JSON.stringify(temp));
+  likePost = (blogPost) => {
+    const temp = {...blogPost};
+    temp.liked = !temp.liked;
+    axios.put(`https://695c1f8d79f2f34749d38110.mockapi.io/posts/${blogPost.id}`, temp)
+      .then((response) => {
+        console.log('Пост изменен => ',response.data);
+        this.fetchPosts();
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }; 
+
+  deletePost = (blogPost) => {
+    if (window.confirm(`Вы уверены, что хотите удалить ${blogPost.title}?`)) {
+      this.setState({
+        isPending: true
+      });
+      axios.delete(`https://695c1f8d79f2f34749d38110.mockapi.io/posts/${blogPost.id}`)
+        .then((response) => {
+          console.log('Пост удален => ', response.data)
+          this.fetchPosts()
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    };  
+  };
 
   handleAddBlogShow = () => {
     this.setState({
@@ -54,47 +98,13 @@ export class Blog extends Component {
     if (e.key === 'Escape' && this.state.showAddBlog) this.handleAddBlogHide()
   };
 
-
-  addNewBlogPost = (blogPost) => {
-    this.setState((state) => {
-      const posts = [...state.blogArr];
-      posts.push(blogPost);
-      localStorage.setItem('blogStore', JSON.stringify(posts));
-
-      return {
-        blogArr: posts
-      }
-    });
-  };
-
   componentDidMount() {
-    axios.get('https://695c1f8d79f2f34749d38110.mockapi.io/posts')
-      .then((response) => {
-        this.setState({
-          blogArr: response.data
-        })
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    this.fetchPosts();
     window.addEventListener('keyup', this.handleEsc)
   };
 
   componentWillUnmount() {
     window.removeEventListener('keyup', this.handleEsc)
-  };
-
-  deletePost = (pos) => {
-    if (window.confirm(`Вы уверены, что хотите удалить ${this.state.blogArr[pos].title}?`)) {
-      const temp = [...this.state.blogArr];
-      temp.splice(pos, 1);
-
-      this.setState({
-        blogArr: temp
-      });
-
-      localStorage.setItem('blogStore', JSON.stringify(temp));
-    };  
   };
 
   handleSelectPost = (blogPost) => {
@@ -103,11 +113,19 @@ export class Blog extends Component {
     })
   };
 
-  //editBlogPost = (updatedBlogPost) => {
-  //  this.setState({
-  //    isPending
-  //  })
-  //}
+  editBlogPost = (updatedBlogPost) => {
+    this.setState({
+      isPending: true
+    });
+    axios.put(`https://695c1f8d79f2f34749d38110.mockapi.io/posts/${updatedBlogPost.id}`, updatedBlogPost)
+    .then((response) => {
+      console.log('Пост отредактирован => ', response.data)
+      this.fetchPosts();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  };
 
   render() {
     const blogPosts = this.state.blogArr.map((item, pos) => {
@@ -117,8 +135,8 @@ export class Blog extends Component {
           title={item.title} 
           description={item.description} 
           liked={item.liked}
-          likePost={() => this.likePost(pos)}
-          deletePost={() => this.deletePost(pos)}
+          likePost={() => this.likePost(item)}
+          deletePost={() => this.deletePost(item)}
           handleEditBlogShow={this.handleEditBlogShow}
           handleSelectPost={() => this.handleSelectPost(item)}
         />
@@ -127,7 +145,7 @@ export class Blog extends Component {
 
     if (this.state.blogArr.length === 0)
       return <h2>Загружаю данные...</h2>
-      
+
     return (
       <>
         {
@@ -135,6 +153,7 @@ export class Blog extends Component {
             <EditPostForm 
               handleEditBlogHide={this.handleEditBlogHide}
               selectedPost={this.state.selectedPost}
+              editBlogPost={this.editBlogPost}
             />
           )
         }
@@ -150,6 +169,9 @@ export class Blog extends Component {
             />
           </>
           : null
+        }
+        {
+          this.state.isPending && <h2>Подождите...</h2>
         }
         <div className="Posts">{blogPosts}</div>   
       </>

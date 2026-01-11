@@ -10,4 +10,12 @@
   display: none;
 }
 
+.addPostBtn {
+    height: 40px;
+    width: 120px;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    border-radius: 16px;
+}
 

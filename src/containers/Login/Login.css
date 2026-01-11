@@ -1,0 +1,40 @@
+.loginForm {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    background-color: white;
+    z-index: 100;
+    padding: 0 12px 0;
+    border-radius: 10px;
+}
+
+.loginForm div {
+    margin-bottom: 20px;
+}
+
+.loginForm input, .loginForm textarea {
+    width: 270px;
+    padding: 0 3px;
+    border-radius: 10px;
+}
+
+.loginForm textarea {
+    height: 100px;
+}
+
+.loginForm input {
+    height: 30px;
+    
+}
+
+
+.loginForm button:hover {
+    opacity: 0.7;
+}
+
+.loginTitle {
+    font-size: 24px;
+}
